@@ -7,6 +7,7 @@ import {signIn, signOut, useSession, getProviders} from 'next-auth/react';
 const Nav = () => {
     const isUserLoggedIn = true;
     const [providers, setProviders] = useState(null);
+    const [toggleDropdown, setToggleDropdown] = useState(false);
 
     useEffect(()=>{
         const setProviders = async () => {
@@ -45,7 +46,36 @@ const Nav = () => {
             <div className='sm:hidden flex relative'>
                 {isUserLoggedIn ? 
                 (<div className='flex'>
-                    <Image src="/assets/images/logo.svg" width={37} height={37} alt="Profile picture" className='rounded-full' onClick={()=>{}}/>
+                    <Image src="/assets/images/logo.svg" 
+                    width={37} height={37} 
+                    alt="Profile picture" 
+                    className='rounded-full' 
+                    onClick={()=>setToggleDropdown((previousSate)=> !previousSate)}/>
+
+                    {toggleDropdown && (
+                        <div className='dropdown'>
+                            <Link
+                             href='/profile'
+                             className='dropdown_list'
+                             onClick={()=> setToggleDropdown(false)}>
+                                My Profile
+                             </Link>
+                             <Link
+                             href='/create-prompt'
+                             className='dropdown_list'
+                             onClick={()=> setToggleDropdown(false)}>
+                                Create Prompt
+                             </Link>
+                             <button 
+                              type="button"
+                              onClick={()=> {setToggleDropdown(false);
+                                             signOut();}}
+                              className='mt-5 w-full black_btn'              
+                              >
+                                Sign Out
+                             </button>
+                        </div>
+                    )}
                 </div>)
                 :
                 (<>

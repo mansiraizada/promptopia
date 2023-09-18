@@ -12,36 +12,39 @@ const handler = NextAuth({
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
         })
     ],
-    async session({session}) {
-        const sessionUser = await User.findOne({
-            email: session.user.email
-        })
-        session.user.id = sessionUser._id.toString();
-        return session;
-    },
-
-    //In order to find out the session we must first login the user
-    async signIn({profile}) {
-        try{
-            await connectToDB();
-            //user already exist
-            const existingUser =  await User.findOne({
-                email: profile.email
+    callbacks: {
+        async session({session}) {
+            const sessionUser = await User.findOne({
+                email: session.user.email
             })
-            //new user
-             if(!existingUser) {
-                await User.createOne({
-                    email: profile.email,
-                    username: profile.username.replace(" ", "").toLowerCase(),
-                    image: profile.image
+            session.user.id = sessionUser._id.toString();
+            return session;
+        },
+    
+        //In order to find out the session we must first login the user
+        async signIn({profile}) {
+            try{
+                await connectToDB();
+                //user already exist
+                const existingUser =  await User.findOne({
+                    email: profile.email
                 })
-             }
-            return true;
-        } catch(err){
-            console.log(err);
-            return false;
+                //new user
+                 if(!existingUser) {
+                    await User.createOne({
+                        email: profile.email,
+                        username: profile.username.replace(" ", "").toLowerCase(),
+                        image: profile.image
+                    })
+                 }
+                return true;
+            } catch(err){
+                console.log(err);
+                return false;
+            }
         }
     }
+    
 })
 
 export {handler as GET, handler as POST};

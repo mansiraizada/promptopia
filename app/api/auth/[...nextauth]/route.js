@@ -31,10 +31,10 @@ const handler = NextAuth({
                 })
                 //new user
                  if(!existingUser) {
-                    await User.createOne({
+                    await User.create({
                         email: profile.email,
-                        username: profile.username.replace(" ", "").toLowerCase(),
-                        image: profile.image
+                        username: profile.name.replace(" ", "").toLowerCase(),
+                        image: profile.image,
                     })
                  }
                 return true;
@@ -43,8 +43,7 @@ const handler = NextAuth({
                 return false;
             }
         }
-    }
-    
+    },
 })
 
 export {handler as GET, handler as POST};

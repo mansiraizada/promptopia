@@ -8,6 +8,8 @@ import Form from '@components/Form';
 const CreatePrompt = () => {
   const [prompt, setPrompt] = useState({ prompt: '', tag: '' });
   const [submitting, setSubmitting] = useState(false);
+  const router = useRouter();
+  const {data: session} = useSession();
 
   const createPrompt = async (e) => {
     e.preventDefault();
@@ -24,7 +26,7 @@ const CreatePrompt = () => {
       })
 
       if(response.ok){
-        Router.push('/')
+        router.push('/')
       }
     } catch (error) {
       console.log(error)

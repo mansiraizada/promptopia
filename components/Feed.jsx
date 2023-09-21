@@ -3,14 +3,14 @@
 import { useState, useEffect } from "react";
 import PromptCard from "./PromptCard";
 
-const PromptCardList = ({data, clickHandler}) => {
+const PromptCardList = ({data, handleTagClick}) => {
     return (
         <div className="mt-16 prompt_layout">
-            {data.map((prompt) => {
+            {data.map((post) => {
                 <PromptCard
-                 key={prompt._id}
-                 post={prompt}
-                 clickTagHandler={clickHandler}
+                 key={post._id}
+                 post={post}
+                 handleTagClick={handleTagClick}
                 />
             })}
         </div>
@@ -19,11 +19,11 @@ const PromptCardList = ({data, clickHandler}) => {
 
 const Feed = () => {
     const [searchText, setSearchText] = useState("");
-    const [prompt, setPrompt] = useState([]);
+    const [posts, setPosts] = useState([]);
 
-    const searchChangeHandler = (e) => {
-        e.preventDefault();
-        setSearchText(e.target.value);
+    const handleSearchChange = (e) => {
+        // e.preventDefault();
+        // setSearchText(e.target.value);
     }
 
     useEffect(() => {
@@ -31,11 +31,13 @@ const Feed = () => {
             const response = await fetch('/api/prompt');
             const data = await response.json();
 
-            setPrompt(data);
+            setPosts(data);
         }
 
         fetchPosts();
     }, [])
+
+    console.log(posts);
 
     return (
         <section className="feed">
@@ -43,15 +45,15 @@ const Feed = () => {
                 <input
                  className="search_input peer"
                  type="text"
-                 placeholde r="Search for a tag or a username"
+                 placeholder="Search for a tag or a username"
                  value={searchText}
-                 onChange={searchChangeHandler}
+                 onChange={handleSearchChange}
                  reuired/>
             </form>
 
             <PromptCardList
-             data={prompt}
-             clickHandler={() => {}}
+             data={posts}
+             handleTagClick={() => {}}
             />
         </section>
     )
